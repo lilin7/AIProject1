@@ -32,7 +32,7 @@ class CNN(nn.Module):
         super(CNN, self).__init__()
         self.conv_layer = nn.Sequential(
 
-            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=3, out_channels=32, kernel_size=3, padding=1), # in_channels=3 because of RGB
             nn.BatchNorm2d(32),
             nn.LeakyReLU(inplace=True),
             nn.Conv2d(in_channels=32, out_channels=32, kernel_size=3, padding=1),
@@ -50,12 +50,12 @@ class CNN(nn.Module):
         )
 
         self.fc_layer = nn.Sequential(
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=0.1), # dropout probability, to reduce the impact of a certain feature
             nn.Linear(8 * 8 * 64, 1000),
             nn.ReLU(inplace=True),
             nn.Linear(1000, 512),
             nn.ReLU(inplace=True),
-            nn.Dropout(p=0.1),
+            nn.Dropout(p=0.1),  # dropout probability, to reduce the impact of a certain feature
             nn.Linear(512, 10)
         )
 

@@ -9,26 +9,28 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
 
+#train
 def loadtraindata():
-    path = './train'
+    path = './train' # stores training set (labeled)
+
+    #use ImageFolder to load images in folder "train", each sub-folder is a class, 3 classes in total
     trainset = torchvision.datasets.ImageFolder(path, transform=transforms.Compose ([ #Compose several transform methods
                                                     transforms.Resize((32, 32)),  # resize to （h,w）. If input single number, is to keep the ratio and change the shortest edge to int
                                                     transforms.CenterCrop(32),
                                                     transforms.ToTensor()# convert data type, get the same format of training set as in examples
                                                 ]))
 
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,
-                                              shuffle=True)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=True)
     return trainloader
 
 
-class Net(nn.Module):  # 定义网络，继承torch.nn.Module
+class CNN(nn.Module):  # 定义网络，继承torch.nn.Module
     def __init__(self):
-        super(Net, self).__init__()
+        super(CNN, self).__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)  # 卷积层
         self.pool = nn.MaxPool2d(2, 2)  # 池化层
         self.conv2 = nn.Conv2d(6, 16, 5)  # 卷积层
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)  # 全连接层
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)  # 全连接层 in_features, out_features
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 3)  # 10个输出
 
@@ -48,7 +50,7 @@ class Net(nn.Module):  # 定义网络，继承torch.nn.Module
 classes = ('NotAPerson', 'Person', 'PersonMask', )
 
 def loadtestdata():
-    path = './train'
+    path = './test'
     testset = torchvision.datasets.ImageFolder(path,
                                                 transform=transforms.Compose([
                                                     transforms.Resize((32, 32)),
@@ -62,7 +64,7 @@ def loadtestdata():
 def trainandsave():
     trainloader = loadtraindata()
     # 神经网络结构
-    net = Net()
+    net = CNN()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)  # 学习率为0.001
     criterion = nn.CrossEntropyLoss()  # 损失函数也可以自己定义，我们这里用的交叉熵损失函数
     # 训练部分
