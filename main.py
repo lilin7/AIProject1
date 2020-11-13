@@ -1,4 +1,3 @@
-#encoding=utf-8
 import torch
 import torchvision
 import torchvision.transforms as transforms
@@ -11,7 +10,7 @@ import numpy as np
 
 
 classes = ('NotAPerson', 'Person', 'PersonMask', ) # define 3 classes for training and testing datasets
-learning_rate = 0.001
+
 #train
 def load_train_data():
     path = './train' # get training set (labeled with subfolders) location
@@ -68,18 +67,16 @@ class CNN(nn.Module):
         return x
 
 
-
-
 def train_phase():
     acc_list = []
     train_loader = load_train_data()
 
     net = CNN()
-    optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)  # learning rate = 0.001
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)  # learning rate = 0.001
     criterion = nn.CrossEntropyLoss()  # Loss function: this criterion combines :func:`nn.LogSoftmax` and :func:`nn.NLLLoss` in one single class.
 
     # training
-    for epoch in range(2):  # train for 5 epochs (1 epoch is to go thru all images in training set)
+    for epoch in range(5):  # train for 5 epochs (1 epoch is to go thru all images in training set)
 
         running_loss = 0.0  # variable to keep record of loss value
         for i, data in enumerate(train_loader, 0):  # use enumerate to get index and data from training set
@@ -109,40 +106,40 @@ def train_phase():
 
             ## print average loss value for each 200 images
             if i % 200 == 199:
-                print('epoch [%d, %5d] average loss: %.3f Accuracy: %.3f' % (epoch + 1, i + 1, running_loss / 200, (correct / total) * 100))
+                print('epoch [%d, %5d]  Average loss: %.3f  Average accuracy: %.2f %%' % (epoch + 1, i + 1, running_loss / 200, (correct / total) * 100))
                 running_loss = 0.0  # set loss value to 0 after each 200 images
 
-    print('Finished Training')
+    print('\nFinished Training')
 
     # when training is finished, save our CNN parameters
     torch.save(net, 'net.pkl')
     torch.save(net.state_dict(), 'net_params.pkl')
 
 
-
-def reload_net():
-    trained_net = torch.load('net.pkl')
-    return trained_net
-
-def imshow(img):
-    img = img / 2 + 0.5     # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
-    plt.show()
-
-
 def test_phase():
     test_loader = load_test_data() # load test datasets
-    net = reload_net() # load our net parameters from file
-    dataiter = iter(test_loader)
-    images, labels = dataiter.next()
-    #imshow(torchvision.utils.make_grid(images, nrow=5))  
+    net = torch.load('net.pkl') # load our net parameters from file
 
-    print('GroundTruth: ', " ".join('%5s' % classes[labels[j]] for j in range(25)))
-    outputs = net(Variable(images))
-    _, predicted = torch.max(outputs.data, 1)
+    correct = 0 # number of correct prediction
+    total = 0 # number of total test cases
+    batch_counter = 0
+    for images, labels in test_loader:
+        outputs = net(images)
+        _, predicted = torch.max(outputs.data, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+        batch_counter = batch_counter+1
 
-    print('Predicted: ', " ".join('%5s' % classes[predicted[j]] for j in range(25)))
+        # print for test reason
+        print('\n*************For batch '+ str(batch_counter) + ':*************')
+        # print('%-15s %-70s' %  ("GroundTruth:", labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+        # print('%-15s %s' % ("Predicted:", predicted)) # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+
+        print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
+        print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
+
+    print('\nAccuracy of the test dataset : %.2f %%' % ((correct / total) * 100))
+
 
 train_phase()
 test_phase()
