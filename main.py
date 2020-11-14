@@ -48,22 +48,22 @@ class CNN(nn.Module):
         self.conv1 = nn.Conv2d(3, 6, 5)  # input channel = 3，output channel = 6, apply 6 filters of 5*5
         self.conv2 = nn.Conv2d(6, 16, 5)  # input channel = 6，output channel = 16, apply 16 filters of 5*5
 
-        self.fc1 = nn.Linear(5 * 5 * 16, 120) # input is 5*5*16 = 400*1, output 120*1, one dimentsion vector
-        self.fc2 = nn.Linear(120, 84) # input is 120*1, output 84*1, one dimentsion vector
+        self.fc1 = nn.Linear(5 * 5 * 16, 120) # input is 5*5*16 = 400*1, output 120*1, one dimension vector
+        self.fc2 = nn.Linear(120, 84) # input is 120*1, output 84*1, one dimension vector
         self.fc3 = nn.Linear(84, 3) # input is 84*1, output 3*1, because there are 3 classes
 
     def forward(self, x):
         # input x, then go thru conv1, then activation function relu, then pooling
         x = self.conv1(x) # output size: 28*28*6
         x = F.relu(x)
-        x = F.max_pool2d(x, 2) # output size: 14*14*6 (apply 2*2 pooling (fliter size = 2, stride =2) to 28*28*6)
+        x = F.max_pool2d(x, 2) # output size: 14*14*6 (apply 2*2 pooling (filter size = 2, stride =2) to 28*28*6)
 
         # input x (14*14*6), then go thru conv2, then activation function relu, then pooling
         x = self.conv2(x) # output size: 10*10*16
         x = F.relu(x)
-        x = F.max_pool2d(x, 2) # output size: 5*5*16 (apply 2*2 pooling (fliter size = 2, stride =2) to 10*10*16)
+        x = F.max_pool2d(x, 2) # output size: 5*5*16 (apply 2*2 pooling (filter size = 2, stride =2) to 10*10*16)
 
-        # flatten the activation maps to one dimention vector
+        # flatten the activation maps to one dimension vector
         x = x.view(x.size()[0], -1)
 
         # pass thru 3 full connection layers
@@ -82,7 +82,7 @@ def train_phase():
     criterion = nn.CrossEntropyLoss()  # Loss function: this criterion combines :func:`nn.LogSoftmax` and :func:`nn.NLLLoss` in one single class.
 
     # training
-    for epoch in range(5):  # train for 5 epochs (1 epoch is to go thru all images in training set)
+    for epoch in range(1):  # train for 10 epochs (1 epoch is to go thru all images in training set)
 
         running_loss = 0.0  # variable to keep record of loss value
         for i, data in enumerate(train_loader, 0):  # use enumerate to get index and data from training set
@@ -155,16 +155,13 @@ def test_phase():
         correct += (predicted == labels).sum().item()
         batch_counter = batch_counter+1
 
-        print(correct)
-        print(total)
-
         # print for test reason
-        print('\n*************For batch '+ str(batch_counter) + ' (25 images):*************')
-        print('%-15s %-70s' %  ("GroundTruth:", labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
-        print('%-15s %s' % ("Predicted:", predicted)) # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
-
-        print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
-        print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
+        # print('\n*************For batch '+ str(batch_counter) + ' (25 images):*************')
+        # print('%-15s %-70s' %  ("GroundTruth:", labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+        # print('%-15s %s' % ("Predicted:", predicted)) # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+        #
+        # print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
+        # print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
 
         # for confusion matrix
         conf_matrix = confusion_matrix(outputs, labels, conf_matrix)
