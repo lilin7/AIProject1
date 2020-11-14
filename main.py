@@ -198,10 +198,16 @@ def test_phase():
                                [tp_Person, fp_Person, fn_Person],
                                [tp_PersonMask,fp_PersonMask, fn_PersonMask]])
 
+    # for confusion matrix
+    print("\nconfusion matrix:")
     print(conf_matrix)
 
-
-
+    df_cm = pd.DataFrame(conf_matrix.numpy(),
+                         index=['NotAPerson', 'Person', 'PersonMask'],
+                         columns=['NotAPerson', 'Person', 'PersonMask'])
+    plt.figure(figsize=(10, 7))
+    sn.heatmap(df_cm, annot=True, cmap="BuPu")
+    plt.show()
 
 
 train_phase()
