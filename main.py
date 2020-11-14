@@ -10,6 +10,7 @@ import numpy as np
 from tabulate import tabulate
 import seaborn as sn
 import pandas as pd
+import datetime
 
 import general_methods
 
@@ -82,7 +83,7 @@ def train_phase():
     criterion = nn.CrossEntropyLoss()  # Loss function: this criterion combines :func:`nn.LogSoftmax` and :func:`nn.NLLLoss` in one single class.
 
     # training
-    for epoch in range(1):  # train for 10 epochs (1 epoch is to go thru all images in training set)
+    for epoch in range(10):  # train for 10 epochs (1 epoch is to go thru all images in training set)
 
         running_loss = 0.0  # variable to keep record of loss value
         for i, data in enumerate(train_loader, 0):  # use enumerate to get index and data from training set
@@ -207,5 +208,17 @@ def test_phase():
     plt.show()
 
 
+start_time = datetime.datetime.now()
 train_phase()
+
+finish_train_time = datetime.datetime.now()
+
+duration_train = finish_train_time - start_time
+print('Training phase takes:', duration_train, '\n')
+
 test_phase()
+finish_test_time = datetime.datetime.now()
+
+duration_test = finish_test_time - finish_train_time
+print('Testing phase takes:', duration_test, '\n')
+
