@@ -7,6 +7,9 @@ from torch.autograd import Variable
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
+from tabulate import tabulate
+
+import general_methods
 
 
 classes = ('NotAPerson', 'Person', 'PersonMask', ) # define 3 classes for training and testing datasets
@@ -123,6 +126,24 @@ def test_phase():
     correct = 0 # number of correct prediction
     total = 0 # number of total test cases
     batch_counter = 0
+
+    # Below is for measure the precision, recall and F1-measure
+    # for class "NotAPerson" 0
+    tp_NotAPerson = 0
+    fp_NotAPerson = 0
+    fn_NotAPerson = 0
+
+    # for class "Person" 1
+    tp_Person = 0
+    fp_Person = 0
+    fn_Person = 0
+
+    # for class "PersonMask" 2
+    tp_PersonMask = 0
+    fp_PersonMask = 0
+    fn_PersonMask = 0
+
+    counter = 0
     for images, labels in test_loader:
         outputs = net(images)
         _, predicted = torch.max(outputs.data, 1)
@@ -130,15 +151,45 @@ def test_phase():
         correct += (predicted == labels).sum().item()
         batch_counter = batch_counter+1
 
+        print(correct)
+        print(total)
+
         # print for test reason
-        print('\n*************For batch '+ str(batch_counter) + ':*************')
-        # print('%-15s %-70s' %  ("GroundTruth:", labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
-        # print('%-15s %s' % ("Predicted:", predicted)) # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+        print('\n*************For batch '+ str(batch_counter) + ' (25 images):*************')
+        print('%-15s %-70s' %  ("GroundTruth:", labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+        print('%-15s %s' % ("Predicted:", predicted)) # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
 
         print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
         print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
 
+        for number in range(labels.size(0)):
+            if classes[labels[number]] == "NotAPerson" and classes[predicted[number]] == "NotAPerson" :
+                tp_NotAPerson = tp_NotAPerson +1
+            elif classes[labels[number]] != "NotAPerson" and classes[predicted[number]] == "NotAPerson" :
+                fp_NotAPerson = fp_NotAPerson +1
+            elif classes[labels[number]] == "NotAPerson" and classes[predicted[number]] != "NotAPerson":
+                fn_NotAPerson = fn_NotAPerson +1
+
+            if classes[labels[number]] == "Person" and classes[predicted[number]] == "Person" :
+                tp_Person = tp_Person +1
+            elif classes[labels[number]] != "Person" and classes[predicted[number]] == "Person" :
+                fp_Person = fp_Person +1
+            elif classes[labels[number]] == "Person" and classes[predicted[number]] != "Person":
+                fn_Person = fn_Person +1
+
+            if classes[labels[number]] == "PersonMask" and classes[predicted[number]] == "PersonMask" :
+                tp_PersonMask = tp_PersonMask +1
+            elif classes[labels[number]] != "PersonMask" and classes[predicted[number]] == "PersonMask" :
+                fp_PersonMask = fp_PersonMask +1
+            elif classes[labels[number]] == "PersonMask" and classes[predicted[number]] != "PersonMask":
+                fn_PersonMask = fn_PersonMask +1
+
+
     print('\nAccuracy of the test dataset : %.2f %%' % ((correct / total) * 100))
+
+    general_methods.printTable([[tp_NotAPerson, fp_NotAPerson, fn_NotAPerson],
+                               [tp_Person, fp_Person, fn_Person],
+                               [tp_PersonMask,fp_PersonMask, fn_PersonMask]])
 
 
 train_phase()
