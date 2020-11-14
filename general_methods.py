@@ -33,9 +33,9 @@ def printTable(statistic_data):
     weight_Person = round((tp_Person + fn_Person) / total_number_of_testcase,3) if (total_number_of_testcase!=0) else 0
     weight_PersonMask = round((tp_PersonMask+fn_PersonMask) / total_number_of_testcase,3) if (total_number_of_testcase!=0) else 0
 
-    precision_weighted_average = round((precision_NotAPerson*weight_NotAPerson+precision_Person*weight_Person+precision_PersonMask*weight_PersonMask)/3, 3)
-    recall_weighted_average = round((recall_NotAPerson*weight_NotAPerson+recall_Person*weight_Person+recall_PersonMask*weight_PersonMask)/3, 3)
-    f1measure_weighted_average = round((f1measure_NotAPerson*weight_NotAPerson+f1measure_Person*weight_Person+f1measure_PersonMask*weight_PersonMask)/3, 3)
+    precision_weighted_average = round((precision_NotAPerson*weight_NotAPerson+precision_Person*weight_Person+precision_PersonMask*weight_PersonMask), 3)
+    recall_weighted_average = round((recall_NotAPerson*weight_NotAPerson+recall_Person*weight_Person+recall_PersonMask*weight_PersonMask), 3)
+    f1measure_weighted_average = round((f1measure_NotAPerson*weight_NotAPerson+f1measure_Person*weight_Person+f1measure_PersonMask*weight_PersonMask), 3)
 
     table_header = ['', 'precision', 'recall', 'f1-score', 'support']
     table_data = [
