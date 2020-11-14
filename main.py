@@ -8,8 +8,11 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 import numpy as np
 from tabulate import tabulate
+import seaborn as sn
+import pandas as pd
 
 import general_methods
+
 
 
 classes = ('NotAPerson', 'Person', 'PersonMask', ) # define 3 classes for training and testing datasets
@@ -118,6 +121,11 @@ def train_phase():
     torch.save(net, 'net.pkl')
     torch.save(net.state_dict(), 'net_params.pkl')
 
+def confusion_matrix(preds, labels, conf_matrix):
+    preds = torch.argmax(preds, 1)
+    for p, t in zip(preds, labels):
+        conf_matrix[p, t] += 1
+    return conf_matrix
 
 def test_phase():
     test_loader = load_test_data() # load test datasets
@@ -129,21 +137,17 @@ def test_phase():
 
     # Below is for measure the precision, recall and F1-measure
     # for class "NotAPerson" 0
-    tp_NotAPerson = 0
-    fp_NotAPerson = 0
-    fn_NotAPerson = 0
+    tp_NotAPerson, fp_NotAPerson, fn_NotAPerson = 0, 0, 0
 
     # for class "Person" 1
-    tp_Person = 0
-    fp_Person = 0
-    fn_Person = 0
+    tp_Person, fp_Person, fn_Person = 0, 0, 0
 
     # for class "PersonMask" 2
-    tp_PersonMask = 0
-    fp_PersonMask = 0
-    fn_PersonMask = 0
+    tp_PersonMask, fp_PersonMask, fn_PersonMask = 0, 0, 0
 
-    counter = 0
+    # for confusion matrix
+    conf_matrix = torch.zeros(3, 3)
+
     for images, labels in test_loader:
         outputs = net(images)
         _, predicted = torch.max(outputs.data, 1)
@@ -161,6 +165,9 @@ def test_phase():
 
         print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
         print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
+
+        # for confusion matrix
+        conf_matrix = confusion_matrix(outputs, labels, conf_matrix)
 
         for number in range(labels.size(0)):
             if classes[labels[number]] == "NotAPerson" and classes[predicted[number]] == "NotAPerson" :
@@ -190,6 +197,11 @@ def test_phase():
     general_methods.printTable([[tp_NotAPerson, fp_NotAPerson, fn_NotAPerson],
                                [tp_Person, fp_Person, fn_Person],
                                [tp_PersonMask,fp_PersonMask, fn_PersonMask]])
+
+    print(conf_matrix)
+
+
+
 
 
 train_phase()
