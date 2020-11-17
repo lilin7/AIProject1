@@ -18,7 +18,7 @@ def load_train_data():
                                                     transforms.ToTensor()# convert data type, get the same format of training set as in examples
                                                 ]))
 
-    train_loader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=True)
+    train_loader = torch.utils.data.DataLoader(trainset, batch_size=4, shuffle=True, drop_last=True)
     return train_loader
 
 def train_phase():

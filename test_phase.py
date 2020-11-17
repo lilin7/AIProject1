@@ -15,9 +15,10 @@ def load_test_data():
     testset = torchvision.datasets.ImageFolder(path,
                                                 transform=transforms.Compose([
                                                     transforms.Resize((32, 32)),
+                                                    transforms.CenterCrop(32),
                                                     transforms.ToTensor()])
                                                 )
-    test_loader = torch.utils.data.DataLoader(testset, batch_size=25, shuffle=True)
+    test_loader = torch.utils.data.DataLoader(testset, batch_size=25, shuffle=True, drop_last=True)
     return test_loader
 
 def confusion_matrix(preds, labels, conf_matrix):
