@@ -1,0 +1,44 @@
+Our dataset actually includes six smaller datasets, 
+1.person_with_mask train dataset,
+2.person_with_mask test dataset,
+3.person_without_mask train dataset,
+4.person_without_mask test dataset,
+5.not_person train dataset, 
+6.not_person test dataset.
+
+For the first two person_with_mask datasets, images come from from online community of data scientists and learning practitioners, Kaggle; 
+and from personal source code datasets, Git.  
+
+The title, the author,and the access link show as below: 
+Face Mask Detection, by Larxel, https://www.kaggle.com/andrewmvd/face-mask-detection
+With/Without Mask, by Niharika Pandit, https://www.kaggle.com/niharika41298/withwithout-mask
+Face Mask Classification, by Dhruv Makwana, https://www.kaggle.com/dhruvmak/face-mask-detection
+Face Mask Detection, by Edward Zhang, https://www.kaggle.com/sshikamaru/face-mask-detection
+Mask detection, by abdelatif, https://www.kaggle.com/moussaid/mask-detection
+COVID-19 Mask Detector, by Niharika Pandit, https://www.kaggle.com/niharika41298/covid-19-mask-detector
+LFW-People (Face Recognition), by Atul Anand{Jha}, https://www.kaggle.com/atulanandjha/lfwpeople
+Real-World-Masked-Face-Dataset, by X-zhangyang, https://github.com/X-zhangyang/Real-World-Masked-Face-Dataset
+Face-Mask-Detection, by chandrikadeb7, https://github.com/chandrikadeb7/Face-Mask-Detection/tree/master/dataset/with_mask
+
+For the two person_without_mask datasets, images come from from online community of data scientists and learning practitioners, Kaggle; 
+from personal source code datasets, Git; and from public datasets, CelebFaces Attributes Dataset (CelebA)
+
+The title, the author,and the access link show as below: 
+Face Mask Detection, by Larxel, https://www.kaggle.com/andrewmvd/face-mask-detection
+With/Without Mask, by Niharika Pandit, https://www.kaggle.com/niharika41298/withwithout-mask
+Face Mask Classification, by Dhruv Makwana, https://www.kaggle.com/dhruvmak/face-mask-detection
+Face Mask Detection, by Edward Zhang, https://www.kaggle.com/sshikamaru/face-mask-detection
+Mask detection, by abdelatif, https://www.kaggle.com/moussaid/mask-detection
+COVID-19 Mask Detector, by Niharika Pandit, https://www.kaggle.com/niharika41298/covid-19-mask-detector
+LFW-People (Face Recognition), by Atul Anand{Jha}, https://www.kaggle.com/atulanandjha/lfwpeople
+Real-World-Masked-Face-Dataset, by X-zhangyang, https://github.com/X-zhangyang/Real-World-Masked-Face-Dataset
+Face-Mask-Detection, by chandrikadeb7, https://github.com/chandrikadeb7/Face-Mask-Detection/tree/master/dataset/with_mask
+CelebFaces Attributes Dataset, by Ziwei Liu, Ping Luo, Xiaogang Wang, Xiaoou Tang, Multimedia Laboratory, The Chinese University of Hong Kong http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html
+
+For the two not_person datasets, images come from from online community of data scientists and learning practitioners, Kaggle
+
+The title, the author,and the access link show as below:
+Animal face, by Larxel, https://www.kaggle.com/andrewmvd/animal-faces
+60,000+ Images of cars, by Paul, https://www.kaggle.com/prondeau/the-car-connection-picture-dataset
+Flower Color Images Set for Classification, by Olga Belitskaya, https://www.kaggle.com/olgabelitskaya/flower-color-images
+STL-10 Image Recognition Dataset, by Jessica Li, https://www.kaggle.com/jessicali9530/stl10
