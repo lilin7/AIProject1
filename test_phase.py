@@ -64,16 +64,15 @@ def test_phase(test_batch_size, show_images_for_how_many_batch):
         correct += (predicted == labels).sum().item()
         batch_counter = batch_counter+1
 
-        #print for test reason
-        print('\n*************For batch '+ str(batch_counter) + ' (25 images):*************')
-        print('%-15s %-70s' %  ("GroundTruth:", labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
-        print('%-15s %s' % ("Predicted:", predicted)) # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
-
-        print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
-        print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
-
-
         if show_image_count < show_images_for_how_many_batch:
+            # print for test reason
+            print('\n*************For batch ' + str(batch_counter) + ' ('+ str(test_batch_size)+' images):*************')
+            print('%-15s %-70s' % ("GroundTruth:",labels))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+            print('%-15s %s' % ("Predicted:",predicted))  # print in format tensor([0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 2, 2, 1, 2, 0, 2, 0, 2, 2, 0, 2, 1, 1, 1, 1])
+
+            print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
+            print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
+
             imshow(torchvision.utils.make_grid(images, nrow=5))  # nrow is how many images per row
             show_image_count = show_image_count+1
 
