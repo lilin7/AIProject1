@@ -30,7 +30,7 @@ def train_phase():
     criterion = nn.CrossEntropyLoss()  # Loss function: this criterion combines :func:`nn.LogSoftmax` and :func:`nn.NLLLoss` in one single class.
 
     # training
-    for epoch in range(10):  # train for 10 epochs (1 epoch is to go thru all images in training set)
+    for epoch in range(2):  # train for 10 epochs (1 epoch is to go thru all images in training set)
 
         running_loss = 0.0  # variable to keep record of loss value
         for i, data in enumerate(train_loader, 0):  # use enumerate to get index and data from training set
