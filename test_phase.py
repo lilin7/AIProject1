@@ -28,10 +28,12 @@ def confusion_matrix(preds, labels, conf_matrix):
         conf_matrix[p, t] += 1
     return conf_matrix
 
-def imshow(img):
+#def imshow(img, labels, predicted):
+def imshow(img, text):
     img = img / 2 + 0.5     # unnormalize
     npimg = img.numpy()
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    plt.text(0, 1.5, text, transform=plt.gca().transAxes)
     plt.show()
 
 def test_phase(test_batch_size, show_images_for_how_many_batch):
@@ -73,7 +75,10 @@ def test_phase(test_batch_size, show_images_for_how_many_batch):
             print('%-15s %s' % ('GroundTruth:', " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0)))))
             print('%-15s %s' % ('Predicted:', " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))))
 
-            imshow(torchvision.utils.make_grid(images, nrow=5))  # nrow is how many images per row
+            text = 'GroundTruth:' + " ".join('%-12s' % classes[labels[number]] for number in range(labels.size(0))) + '\nPredicted:    ' + " ".join('%-12s' % classes[predicted[number]] for number in range(labels.size(0)))
+
+            imshow(torchvision.utils.make_grid(images, nrow=5), text)
+
             show_image_count = show_image_count+1
 
         # for confusion matrix
