@@ -11,7 +11,7 @@ test_batch_size = 5
 start_time = datetime.datetime.now()
 
 # call methods to train our Convolutional Neural Network
-#train_phase.train_phase()
+train_phase.train_phase()
 
 finish_train_time = datetime.datetime.now()
 duration_train = finish_train_time - start_time
