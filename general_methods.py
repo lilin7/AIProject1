@@ -1,5 +1,9 @@
 from tabulate import tabulate
+import matplotlib.pyplot as plt
+import seaborn as sn
+import pandas as pd
 
+# print accuracy, precision, recall, f1-score
 def printTable(statistic_data):
     tp_NotAPerson = statistic_data[0][0]
     fp_NotAPerson = statistic_data[0][1]
@@ -47,3 +51,85 @@ def printTable(statistic_data):
         ('Weighted average', precision_weighted_average, recall_weighted_average, f1measure_weighted_average)
     ]
     print(tabulate(table_data, headers=table_header, tablefmt='grid', numalign="right", colalign=("left", "right", "right", "right")))
+    return [[precision_NotAPerson, recall_NotAPerson, f1measure_NotAPerson, tp_NotAPerson+fn_NotAPerson],
+            [precision_Person, recall_Person, f1measure_Person, tp_Person + fn_Person],
+            [precision_PersonMask, recall_PersonMask, f1measure_PersonMask, tp_PersonMask+fn_PersonMask],
+            [precision_average, recall_average, f1measure_average],
+            [precision_weighted_average, recall_weighted_average, f1measure_weighted_average]]
+
+# calculate the average accuracy, precision, recall, f1-score for the 10 iterations and print table
+def average_measurements(table_list):
+    precision_NotAPerson_total, recall_NotAPerson_total, f1measure_NotAPerson_total, \
+    precision_Person_total, recall_Person_total, f1measure_Person_total, \
+    precision_PersonMask_total, recall_PersonMask_total, f1measure_PersonMask_total, \
+    precision_average_total, recall_average_total, f1measure_average_total, \
+    precision_weighted_average_total, recall_weighted_average_total, f1measure_weighted_average_total = 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000,
+
+    support_NotAPerson_total, support_Person_total, support_PersonMask_total = 0, 0, 0
+
+    accuracy_total = 0.0000
+
+    number_of_iterations = len(table_list)
+
+    for table_index in range(number_of_iterations):
+        precision_NotAPerson_total = precision_NotAPerson_total + table_list[table_index][0][0]
+        recall_NotAPerson_total = recall_NotAPerson_total + table_list[table_index][0][1]
+        f1measure_NotAPerson_total = f1measure_NotAPerson_total + table_list[table_index][0][2]
+        support_NotAPerson_total = support_NotAPerson_total + table_list[table_index][0][3]
+
+        precision_Person_total = precision_Person_total + table_list[table_index][1][0]
+        recall_Person_total = recall_Person_total + table_list[table_index][1][1]
+        f1measure_Person_total = f1measure_Person_total + table_list[table_index][1][2]
+        support_Person_total = support_Person_total + table_list[table_index][1][3]
+
+        precision_PersonMask_total = precision_PersonMask_total + table_list[table_index][2][0]
+        recall_PersonMask_total = recall_PersonMask_total + table_list[table_index][2][1]
+        f1measure_PersonMask_total = f1measure_PersonMask_total + table_list[table_index][2][2]
+        support_PersonMask_total = support_PersonMask_total + table_list[table_index][2][3]
+
+        precision_average_total = precision_average_total + table_list[table_index][3][0]
+        recall_average_total = recall_average_total + table_list[table_index][3][1]
+        f1measure_average_total = f1measure_average_total + table_list[table_index][3][2]
+
+        precision_weighted_average_total = precision_weighted_average_total + table_list[table_index][4][0]
+        recall_weighted_average_total = recall_weighted_average_total + table_list[table_index][4][1]
+        f1measure_weighted_average_total = f1measure_weighted_average_total + table_list[table_index][4][2]
+
+        accuracy_total = accuracy_total + table_list[table_index][5]
+
+
+    print('\nAverage accuracy of the 10 iterations : %.2f %%' % ((accuracy_total/number_of_iterations) * 100))
+
+    table_header = ['', 'precision', 'recall', 'f1-score', 'support']
+    table_data = [
+        ('NotAPerson', round(precision_NotAPerson_total / number_of_iterations, 3),
+         round(recall_NotAPerson_total / number_of_iterations, 3),
+         round(f1measure_NotAPerson_total / number_of_iterations, 3),
+         round(support_NotAPerson_total / number_of_iterations, 0)),
+        ('Person', round(precision_Person_total / number_of_iterations, 3),
+         round(recall_Person_total / number_of_iterations, 3), round(f1measure_Person_total / number_of_iterations, 3),
+         round(support_Person_total / number_of_iterations, 0)),
+        ('PersonMask', round(precision_PersonMask_total / number_of_iterations, 3),
+         round(recall_PersonMask_total / number_of_iterations, 3),
+         round(f1measure_PersonMask_total / number_of_iterations, 3),
+         round(support_PersonMask_total / number_of_iterations, 0)),
+        ('', '', '', ''),
+        ('Average', round(precision_average_total / number_of_iterations, 3),
+         round(recall_average_total / number_of_iterations, 3),
+         round(f1measure_average_total / number_of_iterations, 3)),
+        ('Weighted average', round(precision_weighted_average_total / number_of_iterations, 3),
+         round(recall_weighted_average_total / number_of_iterations, 3),
+         round(f1measure_weighted_average_total / number_of_iterations, 3))
+    ]
+
+    print(tabulate(table_data, headers=table_header, tablefmt='grid', numalign="right",
+                   colalign=("left", "right", "right", "right")))
+
+# to show a confusion matrix
+def show_confusion_matrix(conf_matrix):
+    df_cm = pd.DataFrame(conf_matrix.numpy(),
+                         index=['NotAPerson', 'Person', 'PersonMask'],
+                         columns=['NotAPerson', 'Person', 'PersonMask'])
+    plt.figure(figsize=(10, 7))
+    sn.heatmap(df_cm, annot=True, cmap="BuPu")
+    plt.show()
