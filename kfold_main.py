@@ -7,9 +7,8 @@ import general_methods
 import kfold_train
 import kfold_test
 
-
 # parameters to adjust how many batchs and how many pictures in one batch to print the picture and labels (expected and predicted) for validation
-show_images_for_how_many_batch = 0
+show_images_for_how_many_batch = 1
 test_batch_size = 5
 # parameters to adjust how many epochs for training phase in each iteration of the 10-fold cross-validation
 number_of_epoch = 10
@@ -22,9 +21,8 @@ path = './dataset'  # get data set (labeled with subfolders) location
 dataset = torchvision.datasets.ImageFolder(path, transform=transforms.Compose([  # Compose several transform methods
     transforms.Resize((32, 32)), # resize to （h,w）. If input single number, is to keep the ratio and change the shortest edge to int
     transforms.CenterCrop(32),
-    transforms.ToTensor(),  # convert data type, get the same format of training set as in examples
-    #torchvision.transforms.Normalize((0.1307,), (0.3081,))
-    #transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
+    transforms.ToTensor(),  # convert data type, get the same format of training set as in examples, output is [0-1]
+    transforms.Normalize(mean = [0.485, 0.456, 0.406], std = [0.229, 0.224, 0.225]) #normalize : output = (input - mean) / std, output is [-1 ~1]
 ]))
 
 table_list = [] # for average accuracy, precision, recall, f1-score for the 10 iterations in 10-fold cross-validation

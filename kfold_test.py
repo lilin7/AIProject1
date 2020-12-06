@@ -17,11 +17,27 @@ def confusion_matrix(preds, labels, conf_matrix):
 
 #def imshow(img, labels, predicted):
 def imshow(img, text):
-    img = img / 2 + 0.5     # unnormalize
-    npimg = img.numpy()
-    plt.imshow(np.transpose(npimg, (1, 2, 0)))
+    # img = img / 2 + 0.5     # unnormalize
+    # npimg = img.numpy()
+    # plt.imshow(np.transpose(npimg, (1, 2, 0)))  # change from （channels,imagesize,imagesize） to （imagesize,imagesize,channels)
+
+    # # plt.imshow(np.uint8(npimg))
+    # plt.imshow(npimg.astype(np.uint8))
+    # plt.imshow(np.transpose(img.astype('uint8'), (1, 2, 0)))
+    #plt.imshow(np.transpose(npimg, (1, 2, 0)).astype(np.uint8))
+
+    # unnormalize
+    mn = img.min()
+    mx = img.max()
+    mx -= mn
+    I = ((img - mn) / mx) * 255
+
+    npimg = I.numpy()
+    plt.imshow(np.transpose(npimg, (1, 2, 0)).astype(np.uint8)) # change from （channels,imagesize,imagesize） to （imagesize,imagesize,channels)
+
     plt.text(0, 1.5, text, transform=plt.gca().transAxes)
     plt.show()
+
 
 def kfold_test_phase(i_fold, test_loader, test_batch_size, show_images_for_how_many_batch, conf_matrix_total):
     print('\nBegin testing for fold iteration', i_fold)
