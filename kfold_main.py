@@ -8,11 +8,7 @@ import kfold_train
 import kfold_test
 
 # parameters to adjust how many batchs and how many pictures in one batch to print the picture and labels (expected and predicted) for validation
-<<<<<<< Updated upstream
 show_images_for_how_many_batch = 1
-=======
-show_images_for_how_many_batch = 4
->>>>>>> Stashed changes
 test_batch_size = 5
 # parameters to adjust how many epochs for training phase in each iteration of the 10-fold cross-validation
 number_of_epoch = 5
