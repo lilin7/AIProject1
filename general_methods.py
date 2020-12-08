@@ -43,14 +43,28 @@ def printTable(statistic_data):
 
     table_header = ['', 'precision', 'recall', 'f1-score', 'support']
     table_data = [
-        ('NotAPerson', precision_NotAPerson, recall_NotAPerson, f1measure_NotAPerson, tp_NotAPerson+fn_NotAPerson),
-        ('Person', precision_Person, recall_Person, f1measure_Person, tp_Person + fn_Person),
-        ('PersonMask', precision_PersonMask, recall_PersonMask, f1measure_PersonMask, tp_PersonMask+fn_PersonMask),
+        ('NotAPerson', precision_NotAPerson, recall_NotAPerson, f1measure_NotAPerson),
+        ('Person', precision_Person, recall_Person, f1measure_Person),
+        ('PersonMask', precision_PersonMask, recall_PersonMask, f1measure_PersonMask),
         ('', '', '', ''),
         ('Average', precision_average, recall_average, f1measure_average),
         ('Weighted average', precision_weighted_average, recall_weighted_average, f1measure_weighted_average)
     ]
     print(tabulate(table_data, headers=table_header, tablefmt='grid', numalign="right", colalign=("left", "right", "right", "right")))
+
+    # to print number of images in each class, uncomment this
+    # table_header = ['', 'precision', 'recall', 'f1-score', 'support']
+    # table_data = [
+    #     ('NotAPerson', precision_NotAPerson, recall_NotAPerson, f1measure_NotAPerson, tp_NotAPerson+fn_NotAPerson),
+    #     ('Person', precision_Person, recall_Person, f1measure_Person, tp_Person + fn_Person),
+    #     ('PersonMask', precision_PersonMask, recall_PersonMask, f1measure_PersonMask, tp_PersonMask+fn_PersonMask),
+    #     ('', '', '', ''),
+    #     ('Average', precision_average, recall_average, f1measure_average),
+    #     ('Weighted average', precision_weighted_average, recall_weighted_average, f1measure_weighted_average)
+    # ]
+    # print(tabulate(table_data, headers=table_header, tablefmt='grid', numalign="right", colalign=("left", "right", "right", "right")))
+
+
     return [[precision_NotAPerson, recall_NotAPerson, f1measure_NotAPerson, tp_NotAPerson+fn_NotAPerson],
             [precision_Person, recall_Person, f1measure_Person, tp_Person + fn_Person],
             [precision_PersonMask, recall_PersonMask, f1measure_PersonMask, tp_PersonMask+fn_PersonMask],
@@ -59,6 +73,22 @@ def printTable(statistic_data):
 
 # calculate the average accuracy, precision, recall, f1-score for the 10 iterations and print table
 def average_measurements(table_list):
+    number_of_iterations = len(table_list)
+
+    iterations_table_header = ['', 'precision', 'recall', 'f1-score']
+    iterations_table_data = []
+
+    for table_index in range(number_of_iterations):
+        table_str = str(number_of_iterations)+ '-Fold Cross Validation Iteration ' + str(table_index+1)
+        # weighted_average data
+        data_tuple_for_1_iteration = (table_str, table_list[table_index][4][0], table_list[table_index][4][1], table_list[table_index][4][2])
+        iterations_table_data.append(data_tuple_for_1_iteration)
+
+    print(tabulate(iterations_table_data, headers=iterations_table_header, tablefmt='grid', numalign="right",
+                   colalign=("left", "right", "right", "right")))
+
+
+    # for getting average:
     precision_NotAPerson_total, recall_NotAPerson_total, f1measure_NotAPerson_total, \
     precision_Person_total, recall_Person_total, f1measure_Person_total, \
     precision_PersonMask_total, recall_PersonMask_total, f1measure_PersonMask_total, \
@@ -69,7 +99,6 @@ def average_measurements(table_list):
 
     accuracy_total = 0.0000
 
-    number_of_iterations = len(table_list)
 
     for table_index in range(number_of_iterations):
         precision_NotAPerson_total = precision_NotAPerson_total + table_list[table_index][0][0]
@@ -100,19 +129,24 @@ def average_measurements(table_list):
 
     print('\nAverage accuracy of the 10 iterations : %.2f %%' % ((accuracy_total/number_of_iterations) * 100))
 
-    table_header = ['', 'precision', 'recall', 'f1-score', 'support']
+    #table_header = ['', 'precision', 'recall', 'f1-score', 'support']
+    table_header = ['', 'precision', 'recall', 'f1-score']
     table_data = [
         ('NotAPerson', round(precision_NotAPerson_total / number_of_iterations, 3),
          round(recall_NotAPerson_total / number_of_iterations, 3),
          round(f1measure_NotAPerson_total / number_of_iterations, 3),
-         round(support_NotAPerson_total / number_of_iterations, 0)),
+         #round(support_NotAPerson_total / number_of_iterations, 0)
+         ),
         ('Person', round(precision_Person_total / number_of_iterations, 3),
          round(recall_Person_total / number_of_iterations, 3), round(f1measure_Person_total / number_of_iterations, 3),
-         round(support_Person_total / number_of_iterations, 0)),
+         #round(support_Person_total / number_of_iterations, 0)
+         ),
+
         ('PersonMask', round(precision_PersonMask_total / number_of_iterations, 3),
          round(recall_PersonMask_total / number_of_iterations, 3),
          round(f1measure_PersonMask_total / number_of_iterations, 3),
-         round(support_PersonMask_total / number_of_iterations, 0)),
+         #round(support_PersonMask_total / number_of_iterations, 0)
+         ),
         ('', '', '', ''),
         ('Average', round(precision_average_total / number_of_iterations, 3),
          round(recall_average_total / number_of_iterations, 3),
@@ -122,8 +156,7 @@ def average_measurements(table_list):
          round(f1measure_weighted_average_total / number_of_iterations, 3))
     ]
 
-    print(tabulate(table_data, headers=table_header, tablefmt='grid', numalign="right",
-                   colalign=("left", "right", "right", "right")))
+    print(tabulate(table_data, headers=table_header, tablefmt='grid', numalign="right", colalign=("left", "right", "right", "right")))
 
 # to show a confusion matrix
 def show_confusion_matrix(conf_matrix):

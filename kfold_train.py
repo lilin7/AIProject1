@@ -6,7 +6,7 @@ import CNN
 
 
 def kfold_train_phase(i_fold, train_loader, number_of_epoch):
-    print('\nBegin training for fold iteration', i_fold)
+    print('\nBegin training for K-fold Cross Validation iteration', i_fold)
 
     acc_list = []
     net = CNN.CNN()
@@ -47,7 +47,7 @@ def kfold_train_phase(i_fold, train_loader, number_of_epoch):
                     epoch + 1, i + 1, running_loss / 200, (correct / total) * 100))
                 running_loss = 0.0  # set loss value to 0 after each 200 images
 
-    print('\nFinished training for fold iteration', i_fold)
+    print('\nFinished training for K-fold Cross Validation iteration', i_fold)
 
     # when training is finished, save our CNN parameters
     torch.save(net, './saved_net/net' + str(i_fold) + '.pkl')

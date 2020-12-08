@@ -11,9 +11,8 @@ import general_methods
 
 classes = ('NotAPerson', 'Person', 'PersonMask', ) # define 3 classes for training and testing datasets
 
-def load_test_data(test_batch_size):
-    path = './test' # get testing set (labeled with subfolders) location
-    testset = torchvision.datasets.ImageFolder(path,
+def load_test_data(test_batch_size, test_data_path):
+    testset = torchvision.datasets.ImageFolder(test_data_path,
                                                 transform=transforms.Compose([
                                                     transforms.Resize((32, 32)),
                                                     transforms.CenterCrop(32),
@@ -36,9 +35,11 @@ def imshow(img, text):
     plt.text(0, 1.5, text, transform=plt.gca().transAxes)
     plt.show()
 
-def test_phase(test_batch_size, show_images_for_how_many_batch):
-    test_loader = load_test_data(test_batch_size) # load test datasets
-    net = torch.load('net.pkl') # load our net parameters from file
+def test_phase(show_images_for_how_many_batch, test_batch_size, data_path):
+    test_data_path = data_path + '/test'
+
+    test_loader = load_test_data(test_batch_size, test_data_path) # load test datasets
+    net = torch.load('./saved_net/net1.pkl') # load our net parameters from file
 
     correct = 0 # number of correct prediction
     total = 0 # number of total test cases
@@ -115,7 +116,7 @@ def test_phase(test_batch_size, show_images_for_how_many_batch):
                                [tp_PersonMask,fp_PersonMask, fn_PersonMask]])
 
     # for confusion matrix
-    print("\nconfusion matrix:")
+    print("\nConfusion matrix for test:")
     print(conf_matrix)
 
     df_cm = pd.DataFrame(conf_matrix.numpy(),
@@ -124,3 +125,5 @@ def test_phase(test_batch_size, show_images_for_how_many_batch):
     plt.figure(figsize=(10, 7))
     sn.heatmap(df_cm, annot=True, cmap="BuPu")
     plt.show()
+
+    print('\nFinished Testing')

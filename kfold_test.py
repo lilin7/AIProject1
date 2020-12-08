@@ -40,7 +40,7 @@ def imshow(img, text):
 
 
 def kfold_test_phase(i_fold, test_loader, test_batch_size, show_images_for_how_many_batch, conf_matrix_total):
-    print('\nBegin testing for fold iteration', i_fold)
+    print('\nBegin testing for K-fold Cross Validation iteration', i_fold)
 
     net = torch.load('./saved_net/net' + str(i_fold) + '.pkl')  # load our net parameters from file
 
@@ -72,7 +72,7 @@ def kfold_test_phase(i_fold, test_loader, test_batch_size, show_images_for_how_m
 
         if show_image_count < show_images_for_how_many_batch:
             # print for test reason
-            print('\nOnly print 2 batchs for demostration, can pass in parameter to modify how many batchs you want to demostrate:')
+            print('\nOnly print', show_images_for_how_many_batch, 'batchs for demostration, can pass in parameter to modify how many batchs you want to demostrate:')
             print('\n*************For batch ' + str(batch_counter) + ' (' + str(
                 test_batch_size) + ' images):*************')
             print('%-15s %-70s' % ("GroundTruth:",
@@ -121,10 +121,10 @@ def kfold_test_phase(i_fold, test_loader, test_batch_size, show_images_for_how_m
 
     if total != 0:
         accuracy = round(correct / total, 4)
-        print('\nAccuracy of the test dataset : %.2f %%' % ((correct / total) * 100))
+        print('\nAccuracy of the K-fold Cross Validation test dataset : %.2f %%' % ((correct / total) * 100))
     else:
         accuracy = 0
-        print('\nAccuracy of the test dataset : 0')
+        print('\nAccuracy of the K-fold Cross Validation test dataset : 0')
 
     # for printing precision, recall, f1measure
     table_for_one_iteration = general_methods.printTable([[tp_NotAPerson, fp_NotAPerson, fn_NotAPerson],
@@ -134,10 +134,10 @@ def kfold_test_phase(i_fold, test_loader, test_batch_size, show_images_for_how_m
     table_for_one_iteration.append(accuracy)
 
     # for confusion matrix
-    print('\nConfusion matrix for iteration', i_fold, ':')
+    print('\nConfusion matrix for K-fold Cross Validation iteration', i_fold, ':')
     print(conf_matrix)
 
     general_methods.show_confusion_matrix(conf_matrix)
 
-    print('\nFinished testing for fold iteration', i_fold)
+    print('\nFinished testing for K-fold Cross Validation iteration', i_fold)
     return table_for_one_iteration
